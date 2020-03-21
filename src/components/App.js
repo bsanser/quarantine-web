@@ -1,26 +1,25 @@
 import React, { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 import "./../App.css";
-import PlansList from "./PlansList";
-import PlansService from "./../services/PlansService";
+import Header from "./Header";
+import Home from "./Home";
+import PlansForm from "./PlansForm";
+import NotFound from "./NotFound";
 
 class App extends Component {
-  state = {
-    plans: []
-  };
-  componentDidMount() {
-    this.fetchPlans();
-  }
-  fetchPlans = () => {
-    PlansService.getPlans().then(response =>
-      this.setState({ plans: response.data })
-    );
-  };
-
   render() {
-    const { plans } = this.state;
     return (
       <div className="App">
-        <PlansList plans={plans} />
+        <Header />
+        <main className="container">
+          <Switch>
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/plans/new" component={PlansForm} />
+            <Route exact path="/" component={() => <Redirect to="/home" />} />
+
+            <Route path="/" component={NotFound} />
+          </Switch>
+        </main>
       </div>
     );
   }
