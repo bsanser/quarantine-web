@@ -4,6 +4,14 @@ import { withRouter } from "react-router-dom";
 import PlansList from "./PlansList";
 import PlansService from "./../services/PlansService";
 
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+
+const fabStyle = {
+  right: 20,
+  position: "fixed"
+};
+
 class Home extends Component {
   state = {
     plans: []
@@ -17,21 +25,16 @@ class Home extends Component {
     );
   };
 
-  goToPath(path) {
-    this.props.history.push(path);
-  }
+
 
   render() {
     const { plans } = this.state;
     return (
       <div className="Home">
         <PlansList plans={plans} />
-        <button
-          style={{ border: "1px solid black", borderRadius: "4px" }}
-          onClick={() => this.goToPath("/plans/new")}
-        >
-          Create Plan
-        </button>
+        <Fab color="primary" aria-label="add" style={fabStyle}>
+          <AddIcon onClick={()=>this.props.history.push('/plans/new')} />
+        </Fab>
       </div>
     );
   }
