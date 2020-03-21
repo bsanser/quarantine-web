@@ -1,10 +1,9 @@
 import http from "./BaseService";
 
-console.log("entro en el servicio de los planes");
 const getPlans = () => http.get("/plans");
-
-// const followPlan = planId => http.post(`/tweets/${planId}/follow`, {});
+const createPlan = plan => http.post("/plans", plan);
 
 export default {
-  getPlans
+  getPlans,
+  createPlan
 };

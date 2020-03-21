@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, useField } from "formik";
 import * as Yup from "yup";
+import { Redirect } from "react-router-dom";
+
 import "../styles/PlansForm.css";
+import PlansService from "./../services/PlansService";
 
 const TextGroup = ({ label, ...props }) => {
-  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-  // which we can spread on <input> and also replace ErrorMessage entirely.
   const [field, meta] = useField(props);
   return (
     <div className="text-group">
@@ -19,6 +20,12 @@ const TextGroup = ({ label, ...props }) => {
 };
 
 const PlansForm = () => {
+  const [redirectToHome, setRedirectToHome] = useState(false);
+  const [serverErrors, setServerErrors] = useState(null);
+
+  if (redirectToHome) {
+    return <Redirect to="/home" />;
+  }
   return (
     <Formik
       initialValues={{
@@ -40,10 +47,19 @@ const PlansForm = () => {
         description: Yup.string()
       })}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
+        // setSubmitting(false);
+        console.log(values);
+        PlansService.createPlan(values).then(
+          () => setRedirectToHome(true),
+          error => {
+            const serverErrors = Object.keys(error.response.data.errors).reduce(
+              (acc, el) => ({ ...acc, [el]: true }),
+              {}
+            );
+
+            setServerErrors(...serverErrors);
+          }
+        );
       }}
     >
       {formik => (
