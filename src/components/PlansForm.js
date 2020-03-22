@@ -30,28 +30,29 @@ const PlansForm = props => {
   return (
     <Formik
       initialValues={{
-        title: urlInfo.title || "",
-        host: urlInfo.author || "",
-        link: urlInfo.url || "",
+        title: (urlInfo && urlInfo.title) || "",
+        host: (urlInfo && urlInfo.author) || "",
+        link: (urlInfo && urlInfo.url) || "",
         category: "",
         audience: "",
         date: "",
-        description: urlInfo.description || "",
+        description: (urlInfo && urlInfo.description) || "",
         imageUrl:
-          (urlInfo.image && urlInfo.image.url) ||
+          (urlInfo && urlInfo.image && urlInfo.image.url) ||
           "https://images.unsplash.com/photo-1504541989296-167df755af3f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
         language: ""
       }}
-      validationSchema={Yup.object({
-        title: Yup.string().required("Title is required"),
-        host: Yup.string().required("The host is required"),
-        link: Yup.string().required("The link is required"),
-        category: Yup.string().required("The category is required"),
-        audience: Yup.string().required("The audience is required"),
-        date: Yup.date().required("The date is required"),
-        description: Yup.string(),
-        language: Yup.string().required("The language of the plan is required")
-      })}
+      // validationSchema={Yup.object({
+      //   title: Yup.string().required("Title is required"),
+      //   host: Yup.string().required("The host is required"),
+      //   link: Yup.string().required("The link is required"),
+      //   category: Yup.string().required("The category is required"),
+      //   audience: Yup.string().required("The audience is required"),
+      //   date: Yup.date().required("The date is required"),
+      //   description: Yup.string(),
+      //   language: Yup.string().required("The language of the plan is required")
+      // })}
+      validator={() => ({})}
       onSubmit={(values, { setSubmitting }) => {
         // setSubmitting(false);
         console.log(values);
@@ -74,10 +75,10 @@ const PlansForm = props => {
           <TextGroup label="host" name="host" type="text" placeholder="Host" />
           <TextGroup label="link" name="link" type="text" placeholder="Link" />
           <TextGroup
-            label="categories"
-            name="categories"
+            label="category"
+            name="category"
             type="text"
-            placeholder="Categories"
+            placeholder="category"
           />
           <TextGroup
             label="audience"
