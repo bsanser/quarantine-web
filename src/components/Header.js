@@ -41,7 +41,7 @@ const Header = props => {
             <MenuIcon />
           </BlurOnIcon>
           <Typography variant="h6" className={classes.title}>
-            Quarantining
+            Quarantening
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
