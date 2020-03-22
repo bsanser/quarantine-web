@@ -17,6 +17,10 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-around"
   }
 }));
 
@@ -26,7 +30,7 @@ const Header = props => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <BlurOnIcon
             className={classes.logoButton}
             fontSize="large"

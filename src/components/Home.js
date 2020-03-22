@@ -6,16 +6,23 @@ import PlansService from "./../services/PlansService";
 
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import FormDialog from "./Dialog";
 
 const fabStyle = {
   right: 20,
+  bottom: 20,
   position: "fixed"
 };
 
 class Home extends Component {
-  state = {
-    plans: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      plans: [],
+      isModalOpen: false
+    };
+  }
+
   componentDidMount() {
     this.fetchPlans();
   }
@@ -25,16 +32,22 @@ class Home extends Component {
     );
   };
 
-
+  handleCloseModal = () => {
+    this.setState({ isModalOpen: false });
+  };
 
   render() {
-    const { plans } = this.state;
+    const { plans, isModalOpen } = this.state;
     return (
       <div className="Home">
         <PlansList plans={plans} />
         <Fab color="primary" aria-label="add" style={fabStyle}>
-          <AddIcon onClick={()=>this.props.history.push('/plans/new')} />
+          <AddIcon onClick={() => this.setState({ isModalOpen: true })} />
         </Fab>
+        <FormDialog
+          handleClose={this.handleCloseModal}
+          open={isModalOpen}
+        ></FormDialog>
       </div>
     );
   }

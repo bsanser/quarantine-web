@@ -1,14 +1,20 @@
 import React from "react";
-import { ReactTinyLink } from "react-tiny-link";
+import Microlink from "@microlink/react";
+import styled from "styled-components";
+
+const StyledMicrolink = styled(Microlink)`
+  border-radius: 8px;
+  border: none;
+`;
 
 const PlanItem = ({ plan }) => {
   return (
-    <ReactTinyLink
-      cardSize="small"
-      showGraphic={true}
-      maxLine={2}
-      minLine={1}
+    <StyledMicrolink
       url={plan.link}
+      size="large"
+      author={plan.host}
+      media="video"
+      contrast
     />
   );
 };

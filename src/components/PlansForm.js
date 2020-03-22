@@ -19,9 +19,10 @@ const TextGroup = ({ label, ...props }) => {
   );
 };
 
-const PlansForm = () => {
+const PlansForm = props => {
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [serverErrors, setServerErrors] = useState(null);
+
+  const urlInfo = props.location.state;
 
   if (redirectToHome) {
     return <Redirect to="/home" />;
@@ -29,13 +30,13 @@ const PlansForm = () => {
   return (
     <Formik
       initialValues={{
-        title: "",
-        host: "",
-        link: "",
+        title: urlInfo.title || "",
+        host: urlInfo.author || "",
+        link: urlInfo.url || "",
         categories: "",
         audience: "",
         date: "",
-        description: ""
+        description: urlInfo.description || ""
       }}
       validationSchema={Yup.object({
         title: Yup.string().required("Title is required"),
@@ -52,12 +53,7 @@ const PlansForm = () => {
         PlansService.createPlan(values).then(
           () => setRedirectToHome(true),
           error => {
-            const serverErrors = Object.keys(error.response.data.errors).reduce(
-              (acc, el) => ({ ...acc, [el]: true }),
-              {}
-            );
-
-            setServerErrors(...serverErrors);
+            console.error(error);
           }
         );
       }}
