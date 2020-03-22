@@ -33,19 +33,24 @@ const PlansForm = props => {
         title: urlInfo.title || "",
         host: urlInfo.author || "",
         link: urlInfo.url || "",
-        categories: "",
+        category: "",
         audience: "",
         date: "",
-        description: urlInfo.description || ""
+        description: urlInfo.description || "",
+        imageUrl:
+          (urlInfo.image && urlInfo.image.url) ||
+          "https://images.unsplash.com/photo-1504541989296-167df755af3f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+        language: ""
       }}
       validationSchema={Yup.object({
         title: Yup.string().required("Title is required"),
         host: Yup.string().required("The host is required"),
         link: Yup.string().required("The link is required"),
-        categories: Yup.string().required("The category is required"),
+        category: Yup.string().required("The category is required"),
         audience: Yup.string().required("The audience is required"),
         date: Yup.date().required("The date is required"),
-        description: Yup.string()
+        description: Yup.string(),
+        language: Yup.string().required("The language of the plan is required")
       })}
       onSubmit={(values, { setSubmitting }) => {
         // setSubmitting(false);
@@ -81,6 +86,12 @@ const PlansForm = props => {
             placeholder="Audience"
           />
           <TextGroup label="date" name="date" type="text" placeholder="Date" />
+          <TextGroup
+            label="language"
+            name="language"
+            type="text"
+            placeholder="Language"
+          />
           <TextGroup
             label="description"
             name="description"

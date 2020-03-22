@@ -17,19 +17,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const FormDialog = ({ handleClose, open, onSubmit, history }) => {
   const [urlInfo, setUrlInfo] = useState({});
 
-  // const getInfoFromUrl = url => {
-  //   UrlService.getInfoFromUrl(url).then(response => setUrlInfo(response.data));
-  // };
-
-  // useEffect(() => getInfoFromUrl());
-
   const handleOnChange = e => {
     setUrlInfo(e.target.value);
   };
 
   const handleLinkSubmission = async () => {
     const { data } = await UrlService.getInfoFromUrl(urlInfo);
-    console.log({ data });
     history.push("/plans/new", data);
   };
 
@@ -46,7 +39,8 @@ const FormDialog = ({ handleClose, open, onSubmit, history }) => {
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          We'll get all the info we can from it (and you can edit afterwards)
+          We'll get all the info from it (and you can edit afterwards). Remember
+          to start the link with http or https!
         </DialogContentText>
         <TextField
           autoFocus
