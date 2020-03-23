@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState} from "react";
 import { device } from "./../styles/breakpoints";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
@@ -87,7 +87,6 @@ const PlansForm = props => {
   const [category, setCategory] = useState(null);
   const [language, setLanguage] = React.useState("");
 
-
   const handleChangeTitle = event => {
     setTitle(event.target.value);
   };
@@ -101,8 +100,7 @@ const PlansForm = props => {
     setDate(value);
   };
 
-  const handleChangeCategory = (event, category) => {
-    console.log(category);
+  const handleChangeCategory = (_event, category) => {
     setCategory(category);
   };
 
@@ -150,18 +148,20 @@ const PlansForm = props => {
         </DateWrapper>
         <StyledInputLabel>Category*</StyledInputLabel>
         <CategoriesWrapper>
-          {Object.entries(categories).map(category => (
-            <Button
-              key={category[0]}
-              variant={category === category[0] ? "contained" : "outlined"}
-              color="primary"
-              size="small"
-              startIcon={category[1]}
-              onClick={e => handleChangeCategory(e, category[0])}
-            >
-              {category[0]}
-            </Button>
-          ))}
+          {Object.entries(categories).map(c => {
+            return (
+              <Button
+                key={c[0]}
+                variant={category === c[0] ? "contained" : "outlined"}
+                color="primary"
+                size="small"
+                startIcon={c[1]}
+                onClick={e => handleChangeCategory(e, c[0])}
+              >
+                {c[0]}
+              </Button>
+            );
+          })}
         </CategoriesWrapper>
         <FormControl className={classes.formControl}>
           <InputLabel id="demo-simple-select-label">Language</InputLabel>
