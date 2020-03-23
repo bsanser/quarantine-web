@@ -13,6 +13,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
+import LANGUAGES from "./../constants/languages";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,18 +37,14 @@ const useStyles = makeStyles(theme => ({
 const CardComponent = props => {
   const classes = useStyles();
   const {
-    plan: { description, title, imageUrl, date, category }
+    plan: { description, title, imageUrl, date, category, language }
   } = props;
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar
-            aria-label="recipe"
-            src="https://cdn.countryflags.com/thumbs/spain/flag-round-250.png"
-          >
-            R
+          <Avatar aria-label="recipe" src={LANGUAGES[language.toLowerCase()]}>
           </Avatar>
         }
         action={

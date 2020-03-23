@@ -1,17 +1,19 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { device } from "./../styles/breakpoints";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import Button from "@material-ui/core/Button";
-import categories from "./../constants/categories";
+import CATEGORIES from "./../constants/categories";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
+import { Redirect } from "react-router-dom";
 
+import PlansService from "./../services/PlansService";
 import languages from "./../constants/languages";
 
 const Container = styled.div`
@@ -80,12 +82,23 @@ const StyledInputLabel = styled(InputLabel)`
 
 const PlansForm = props => {
   const classes = useStyles();
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [link, setLink] = React.useState("");
-  const [date, setDate] = React.useState(new Date());
+  const urlInfo = props.location.state;
+  const [title, setTitle] = useState((urlInfo && urlInfo.title) || "");
+  const [description, setDescription] = useState(
+    (urlInfo && urlInfo.description) || ""
+  );
+  const [link, setLink] = useState((urlInfo && urlInfo.url) || "");
+  const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState(null);
-  const [language, setLanguage] = React.useState("");
+  const [language, setLanguage] = useState("");
+  const [imageUrl, setImageUrl] = useState(
+    (urlInfo && urlInfo.image && urlInfo.image.url) ||
+      "https://images.unsplash.com/photo-1504541989296-167df755af3f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+  );
+  const [redirectToHome, setRedirectToHome] = useState(false);
+  if (redirectToHome) {
+    return <Redirect to="/home" />;
+  }
 
   const handleChangeTitle = event => {
     setTitle(event.target.value);
@@ -110,6 +123,20 @@ const PlansForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    PlansService.createPlan({
+      date,
+      title,
+      description,
+      link,
+      category: category.toLowerCase(),
+      language,
+      imageUrl
+    }).then(
+      () => setRedirectToHome(true),
+      error => {
+        console.error(error);
+      }
+    );
     console.log({ date, title, description, link, category, language });
   };
 
@@ -148,7 +175,7 @@ const PlansForm = props => {
         </DateWrapper>
         <StyledInputLabel>Category*</StyledInputLabel>
         <CategoriesWrapper>
-          {Object.entries(categories).map(c => {
+          {Object.entries(CATEGORIES).map(c => {
             return (
               <Button
                 key={c[0]}
