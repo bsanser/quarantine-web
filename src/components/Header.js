@@ -10,7 +10,8 @@ import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    backgroundColor: "#2A344B"
   },
   logoButton: {
     marginRight: theme.spacing(2)

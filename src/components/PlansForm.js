@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 import { Formik, useField } from "formik";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
-
 import "../styles/PlansForm.css";
 import PlansService from "./../services/PlansService";
 
@@ -52,7 +53,6 @@ const PlansForm = props => {
         description: Yup.string(),
         language: Yup.string().required("The language of the plan is required")
       })}
-
       onSubmit={(values, { setSubmitting }) => {
         // setSubmitting(false);
         console.log(values);
@@ -64,14 +64,18 @@ const PlansForm = props => {
         );
       }}
     >
-      {formik => (
+      {formik => ({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting
+        /* and other goodies */
+      }) => (
         <form className="plans-form" onSubmit={formik.handleSubmit}>
-          <TextGroup
-            label="title"
-            name="title"
-            type="text"
-            placeholder="Title"
-          />
+          <TextField id="title" label="Title" name="title" required />
           <TextGroup label="host" name="host" type="text" placeholder="Host" />
           <TextGroup label="link" name="link" type="text" placeholder="Link" />
           <TextGroup
