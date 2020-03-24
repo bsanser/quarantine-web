@@ -1,5 +1,5 @@
 import React from "react";
-import PlanItem from "./PlanItem";
+import Card from "./Card";
 import styled from "styled-components";
 import { device } from "./../styles/breakpoints";
 
@@ -25,7 +25,7 @@ const PlanList = ({ plans }) => {
   return (
     <Wrapper>
       {plans.map((plan, index) => (
-        <PlanItem plan={plan} key={plan.id} />
+        <Card plan={plan} key={plan.id} />
       ))}
     </Wrapper>
   );

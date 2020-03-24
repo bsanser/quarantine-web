@@ -14,6 +14,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import LANGUAGES from "./../constants/languages";
+import { formatDifference, relativeDate } from "./../utils/date-utils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,13 +40,14 @@ const CardComponent = props => {
   const {
     plan: { description, title, imageUrl, date, category, language }
   } = props;
-
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" src={LANGUAGES[language.toLowerCase()]}>
-          </Avatar>
+          <Avatar
+            aria-label="recipe"
+            src={LANGUAGES[language.toLowerCase()]}
+          ></Avatar>
         }
         action={
           <IconButton aria-label="settings">
@@ -53,7 +55,9 @@ const CardComponent = props => {
           </IconButton>
         }
         title={title}
-        subheader={date}
+        subheader={`${formatDifference(new Date(date), new Date(), {
+          addSuffix: true
+        })} - ${relativeDate(new Date(date), new Date())}`}
       />
       <CardMedia className={classes.media} image={imageUrl} title="eLTITULO" />
       <CardContent>
@@ -63,7 +67,7 @@ const CardComponent = props => {
       </CardContent>
       <CardActions className={classes.actions} disableSpacing>
         <Button
-          variant="outlined"
+          variant="text"
           color="primary"
           className={classes.button}
           startIcon={<MusicNoteIcon />}
