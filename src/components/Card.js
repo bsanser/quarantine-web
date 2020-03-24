@@ -14,7 +14,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import LANGUAGES from "./../constants/languages";
-import { formatDifference, relativeDate } from "./../utils/date-utils";
+import { formatDifference, relativeDate } from "./../utils/date-utils/date-utils";
 
 const useStyles = makeStyles(theme => ({
   root: {

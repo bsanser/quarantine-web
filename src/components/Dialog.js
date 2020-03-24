@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,21 +10,49 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { withRouter } from "react-router-dom";
 import UrlService from "./../services/UrlService";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const useStyles = makeStyles(theme => ({
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative"
+  },
+  buttonProgress: {
+    color: theme.primary,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12
+  }
+}));
+
 const FormDialog = ({ handleClose, open, onSubmit, history }) => {
   const [urlInfo, setUrlInfo] = useState({});
+  const [loading, setLoading] = useState(false);
+  const classes = useStyles();
 
   const handleOnChange = e => {
     setUrlInfo(e.target.value);
   };
 
   const handleLinkSubmission = async () => {
-    const { data } = await UrlService.getInfoFromUrl(urlInfo);
-    history.push("/plans/new", data);
+    if (!loading) {
+      try {
+        setLoading(true);
+        const { status, data } = await UrlService.getInfoFromUrl(urlInfo);
+        if (status === 201) {
+          setLoading(false);
+          history.push("/plans/new", data);
+        }
+      } catch (err) {
+        alert(err); // TypeError: failed to fetch
+      }
+    }
   };
 
   return (
@@ -53,12 +82,22 @@ const FormDialog = ({ handleClose, open, onSubmit, history }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color="primary" variant="contained">
           Cancel
         </Button>
-        <Button onClick={handleLinkSubmission} color="primary">
-          Send link
-        </Button>
+        <div className={classes.wrapper}>
+          <Button
+            onClick={handleLinkSubmission}
+            color="primary"
+            disabled={loading}
+            variant="contained"
+          >
+            Send link
+          </Button>
+          {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </div>
       </DialogActions>
     </Dialog>
   );
