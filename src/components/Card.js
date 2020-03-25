@@ -14,7 +14,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import LANGUAGES from "./../constants/languages";
-import { formatDifference, relativeDate } from "./../utils/date-utils/date-utils";
+import { formatDifference, relativeDate } from "../utils/date-utils";
+
+import { truncateString } from '../utils/string-utils';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,7 +56,7 @@ const CardComponent = props => {
             <MoreVertIcon />
           </IconButton>
         }
-        title={title}
+        title={truncateString(title,70)}
         subheader={`${formatDifference(new Date(date), new Date(), {
           addSuffix: true
         })} - ${relativeDate(new Date(date), new Date())}`}
