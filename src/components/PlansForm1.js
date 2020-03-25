@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import Button from "@material-ui/core/Button";
+import Chip from "@material-ui/core/Chip";
 import CATEGORIES from "./../constants/categories";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -43,9 +44,10 @@ const CategoriesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 16px;
-  > button {
-    margin-right: 8px;
-    margin-bottom: 8px;
+  > div {
+    padding: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
   }
 `;
 
@@ -73,6 +75,9 @@ const useStyles = makeStyles(theme => ({
   },
   formControl: {
     marginBottom: "16px"
+  },
+  select: {
+    background: "transparent"
   }
 }));
 
@@ -176,17 +181,18 @@ const PlansForm = props => {
         <StyledInputLabel>Category*</StyledInputLabel>
         <CategoriesWrapper>
           {Object.entries(CATEGORIES).map(c => {
+            console.log(c[1]);
             return (
-              <Button
+              <Chip
                 key={c[0]}
-                variant={category === c[0] ? "contained" : "outlined"}
-                color="primary"
+                icon={c[1]}
                 size="small"
-                startIcon={c[1]}
+                label={c[0]}
+                clickable
+                color="primary"
                 onClick={e => handleChangeCategory(e, c[0])}
-              >
-                {c[0]}
-              </Button>
+                variant={category === c[0] ? "contained" : "outlined"}
+              />
             );
           })}
         </CategoriesWrapper>
@@ -197,6 +203,7 @@ const PlansForm = props => {
             id="demo-simple-select"
             value={language}
             onChange={handleChangeLanguage}
+            className={classes.select}
           >
             {Object.entries(languages).map(entry => (
               <MenuItem value={entry[0]} key={entry[0]}>
