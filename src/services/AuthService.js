@@ -1,13 +1,11 @@
 import http from "./BaseService";
 
-const login = ({ email, password }) => http.post("/sessions", { email, password });
-
+const loginWithGoogle = () => http.get('/auth/google');
 const logout = () => http.delete("/sessions");
-
 const register = data => http.post("/users", data);
 
 export default {
-  login,
+  loginWithGoogle,
   logout,
   register
 };

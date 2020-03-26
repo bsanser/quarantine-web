@@ -14,7 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Button from "@material-ui/core/Button";
 
-import LoginDialog from "./LoginDialog";
+import LoginModal from "./LoginModal";
 import { AuthContext } from "./../contexts/AuthContext";
 import AuthService from "./../services/AuthService";
 
@@ -43,10 +43,19 @@ const Header = props => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
-
+  const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
   const handleMenu = event => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      const response = await AuthService.loginWithGoogle();
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <AuthContext.Consumer>
@@ -110,14 +119,16 @@ const Header = props => {
                     </Menu>
                   </div>
                 ) : (
-                  <Button color="inherit">Login</Button>
+                  <Button color="inherit" onClick={handleLoginWithGoogle}>
+                    Login
+                  </Button>
                 )}
               </Toolbar>
             </AppBar>
-            <LoginDialog
-              isOpen={isModalOpen}
+            <LoginModal
+              isModalOpen={false}
               handleClose={handleModalClose}
-            ></LoginDialog>
+            ></LoginModal>
           </div>
         );
       }}
