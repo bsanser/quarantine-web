@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import { Redirect } from "react-router-dom";
+import { replaceSpaceWithHyphens, replaceHyphensWithSpaces } from "./../utils/string-utils";
 
 import PlansService from "./../services/PlansService";
 import languages from "./../constants/languages";
@@ -119,7 +120,7 @@ const PlansForm = props => {
   };
 
   const handleChangeCategory = (_event, category) => {
-    setCategory(category);
+    setCategory(replaceSpaceWithHyphens(category));
   };
 
   const handleChangeLanguage = event => {
@@ -181,7 +182,7 @@ const PlansForm = props => {
         <StyledInputLabel>Category*</StyledInputLabel>
         <CategoriesWrapper>
           {Object.entries(CATEGORIES).map(c => {
-            console.log(c[1]);
+            console.log(category, c[0])
             return (
               <Chip
                 key={c[0]}
@@ -191,7 +192,7 @@ const PlansForm = props => {
                 clickable
                 color="primary"
                 onClick={e => handleChangeCategory(e, c[0])}
-                variant={category === c[0] ? "contained" : "outlined"}
+                variant={category === replaceSpaceWithHyphens(c[0]) ? "default" : "outlined"}
               />
             );
           })}

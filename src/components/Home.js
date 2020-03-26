@@ -10,24 +10,26 @@ import FormDialog from "./Dialog";
 import FiltersList from "./FiltersList";
 
 const fabStyle = {
+  margin: 0,
+  top: 'auto',
   right: 20,
   bottom: 20,
-  position: "fixed"
+  left: 'auto',
+  position: 'fixed',
 };
 
 const Home = () => {
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [todayFilter, setTodayFilter] = useState(false);
+  const [todayFilter, setTodayFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [languageFilter, setLanguageFilter] = useState("all");
 
   const handleFilterByToday = () => {
-    setTodayFilter(!todayFilter);
+    setTodayFilter("today");
   };
   const handleApplyFilter = event => {
-    const name = event.target.name;
-    const value = event.target.value;
+    const { name, value } = event.target;
     // eslint-disable-next-line default-case
     switch (name) {
       case "category":
@@ -45,24 +47,13 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPlans = () => {
-      if (
-        !todayFilter &&
-        categoryFilter === "all" &&
-        languageFilter === "all"
-      ) {
-        PlansService.getPlans().then(response => setPlans(response.data));
-        return;
-      }
-      if (categoryFilter !== "all") {
-        PlansService.getPlansByCategory(categoryFilter.toLowerCase()).then(response => {
-          console.log(response.data)
-          setPlans(response.data)
-        }
-         
-        );
-      
-        return;
-      }
+      PlansService.getPlans({
+        date: todayFilter,
+        category: categoryFilter.toLowerCase(),
+        language: languageFilter
+      }).then(response => {
+        setPlans(response.data);
+      });
     };
     fetchPlans();
   }, [categoryFilter, todayFilter, languageFilter]);

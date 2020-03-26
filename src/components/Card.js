@@ -12,11 +12,12 @@ import Typography from "@material-ui/core/Typography";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import MusicNoteIcon from "@material-ui/icons/MusicNote";
+
 import LANGUAGES from "./../constants/languages";
+import CATEGORIES from "./../constants/categories";
 import { formatDifference, relativeDate } from "../utils/date-utils";
 
-import { truncateString } from '../utils/string-utils';
+import { truncateString, capitalizeAndSplit } from "../utils/string-utils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,6 +43,7 @@ const CardComponent = props => {
   const {
     plan: { description, title, imageUrl, date, category, language }
   } = props;
+
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -56,7 +58,7 @@ const CardComponent = props => {
             <MoreVertIcon />
           </IconButton>
         }
-        title={truncateString(title,70)}
+        title={truncateString(title, 70)}
         subheader={`${formatDifference(new Date(date), new Date(), {
           addSuffix: true
         })} - ${relativeDate(new Date(date), new Date())}`}
@@ -72,9 +74,9 @@ const CardComponent = props => {
           variant="text"
           color="primary"
           className={classes.button}
-          startIcon={<MusicNoteIcon />}
+          startIcon={CATEGORIES[capitalizeAndSplit(category)]}
         >
-          {category}
+          {capitalizeAndSplit(category)}
         </Button>
         <div>
           <IconButton aria-label="add to favorites">

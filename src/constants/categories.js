@@ -28,7 +28,7 @@ export default {
   Coaching: <SupervisorAccountIcon />,
   Languages: <LanguageIcon />,
   Movies: <MovieIcon />,
-  "TV Shows": <LiveTvRoundedIcon />,
+  "Tv Shows": <LiveTvRoundedIcon />,
   Books: <LibraryBooksRoundedIcon />,
   Other: <AllInclusiveIcon />
 };
