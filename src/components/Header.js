@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import styled from "styled-components";
+
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,7 +10,9 @@ import IconButton from "@material-ui/core/IconButton";
 import BlurOnIcon from "@material-ui/icons/BlurOn";
 import MenuIcon from "@material-ui/icons/Menu";
 import FaceIcon from "@material-ui/icons/Face";
-import styled from "styled-components";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+
 import LoginDialog from "./LoginDialog";
 import { AuthContext } from "./../contexts/AuthContext";
 
@@ -35,8 +39,12 @@ const BrandContainer = styled.div`
 const Header = props => {
   const classes = useStyles();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isMenuOpen = Boolean(anchorEl);
 
   const handleModalClose = () => setModalOpen(false);
+  const handleMenu = event => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   return (
     <AuthContext.Consumer>
@@ -64,7 +72,37 @@ const Header = props => {
                 </BrandContainer>
 
                 {isAuthenticated() ? (
-                  <span>Hi,{user.name}</span>
+                  <div>
+                    <span>Hi, {user.name}</span>
+                    <IconButton
+                      aria-label="account of current user"
+                      aria-controls="menu-appbar"
+                      aria-haspopup="true"
+                      onClick={handleMenu}
+                      color="inherit"
+                    >
+                      <FaceIcon />
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right"
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right"
+                      }}
+                      open={isMenuOpen}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={handleClose}>My favourites</MenuItem>
+                      <MenuItem onClick={handleClose}>Plans I suggested</MenuItem>
+                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    </Menu>
+                  </div>
                 ) : (
                   <IconButton
                     aria-label="delete"
