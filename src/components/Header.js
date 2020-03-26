@@ -12,9 +12,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import FaceIcon from "@material-ui/icons/Face";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import Button from "@material-ui/core/Button";
 
 import LoginDialog from "./LoginDialog";
 import { AuthContext } from "./../contexts/AuthContext";
+import AuthService from "./../services/AuthService";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,8 +52,10 @@ const Header = props => {
     <AuthContext.Consumer>
       {context => {
         const { user, onUserChange, isAuthenticated } = context;
-        console.log(isAuthenticated());
-        console.log(user);
+        const handleLogout = () => {
+          AuthService.logout().then(user => onUserChange(user));
+        };
+
         return (
           <div className={classes.root}>
             <AppBar position="static">
@@ -99,18 +103,14 @@ const Header = props => {
                       onClose={handleClose}
                     >
                       <MenuItem onClick={handleClose}>My favourites</MenuItem>
-                      <MenuItem onClick={handleClose}>Plans I suggested</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        Plans I suggested
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </Menu>
                   </div>
                 ) : (
-                  <IconButton
-                    aria-label="delete"
-                    className={classes.margin}
-                    color="inherit"
-                  >
-                    <FaceIcon onClick={() => setModalOpen(true)} />
-                  </IconButton>
+                  <Button color="inherit">Login</Button>
                 )}
               </Toolbar>
             </AppBar>

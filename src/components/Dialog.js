@@ -55,6 +55,11 @@ const FormDialog = ({ handleClose, open, onSubmit, history }) => {
     }
   };
 
+  const handleCancel = () => {
+    setLoading(false);
+    handleClose()
+  }
+
   return (
     <Dialog
       open={open}
@@ -82,7 +87,7 @@ const FormDialog = ({ handleClose, open, onSubmit, history }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary" variant="contained">
+        <Button onClick={handleCancel} color="primary" variant="contained">
           Cancel
         </Button>
         <div className={classes.wrapper}>
