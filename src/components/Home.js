@@ -8,26 +8,30 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import FormDialog from "./Dialog";
 import FiltersList from "./FiltersList";
+import { formatToISO } from "./../utils/date-utils";
 
 const fabStyle = {
   margin: 0,
-  top: 'auto',
+  top: "auto",
   right: 20,
   bottom: 20,
-  left: 'auto',
-  position: 'fixed',
+  left: "auto",
+  position: "fixed"
 };
 
 const Home = () => {
+  console.log(formatToISO(new Date())); //2020-03-26T13:45:56Z
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [todayFilter, setTodayFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [languageFilter, setLanguageFilter] = useState("all");
 
-  const handleFilterByToday = () => {
-    setTodayFilter("today");
-  };
+  const handleFilterByToday = () =>
+    todayFilter === "all"
+      ? setTodayFilter(formatToISO(new Date()))
+      : setTodayFilter("all");
+
   const handleApplyFilter = event => {
     const { name, value } = event.target;
     // eslint-disable-next-line default-case

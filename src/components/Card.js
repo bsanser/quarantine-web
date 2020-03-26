@@ -20,9 +20,6 @@ import { formatDifference, relativeDate } from "../utils/date-utils";
 import { truncateString, capitalizeAndSplit } from "../utils/string-utils";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    maxWidth: 345
-  },
   media: {
     height: 0,
     paddingTop: "56.25%" // 16:9

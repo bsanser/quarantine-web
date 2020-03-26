@@ -40,7 +40,7 @@ const FiltersList = ({
   return (
     <FiltersContainer>
       <Button
-        variant={today ? "contained" : "outlined"}
+        variant={today === "all" ? "outlined" : "contained"}
         color="primary"
         name="today"
         onClick={handleFilterByToday}
