@@ -17,7 +17,6 @@ function BootstrapTooltip(props) {
     <Tooltip
       arrow
       classes={classes}
-      disableFocusListener
       {...props}
     />
   );

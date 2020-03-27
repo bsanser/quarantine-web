@@ -22,7 +22,7 @@ const fabStyle = {
 };
 
 const Home = ({ context }) => {
-  console.log(formatToISO(new Date())); //2020-03-26T13:45:56Z
+  // console.log(formatToISO(new Date())); //2020-03-26T13:45:56Z
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [todayFilter, setTodayFilter] = useState("all");

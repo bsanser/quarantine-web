@@ -55,13 +55,13 @@ const Header = ({ context, ...props }) => {
   const { user, onUserChange, isAuthenticated } = context;
   useEffect(() => {
     AuthService.getCurrentUser().then(user => onUserChange(user.data));
-  });
+  }, [onUserChange]);
   const handleLogout = () => {
     AuthService.logout().then(user => onUserChange(user));
   };
 
   return (
-    <AppBar position="static"className={classes.appBar}>
+    <AppBar position="static" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <BrandContainer>
           <BlurOnIcon
