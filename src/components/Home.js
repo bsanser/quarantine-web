@@ -9,6 +9,8 @@ import AddIcon from "@material-ui/icons/Add";
 import FormDialog from "./Dialog";
 import FiltersList from "./FiltersList";
 import { formatToISO } from "./../utils/date-utils";
+import Tooltip from "./../components/Tooltip";
+import { AuthContext } from "../contexts/AuthContext";
 
 const fabStyle = {
   margin: 0,
@@ -19,13 +21,14 @@ const fabStyle = {
   position: "fixed"
 };
 
-const Home = () => {
+const Home = ({ context }) => {
   console.log(formatToISO(new Date())); //2020-03-26T13:45:56Z
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [todayFilter, setTodayFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [languageFilter, setLanguageFilter] = useState("all");
+  const { isAuthenticated } = context;
 
   const handleFilterByToday = () =>
     todayFilter === "all"
@@ -43,6 +46,10 @@ const Home = () => {
         setLanguageFilter(value);
         break;
     }
+  };
+
+  const handleAddPlan = () => {
+    if (isAuthenticated()) setModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -72,9 +79,17 @@ const Home = () => {
         today={todayFilter}
       ></FiltersList>
       <PlansList plans={plans} />
-      <Fab color="primary" aria-label="add" style={fabStyle}>
-        <AddIcon onClick={() => setModalOpen(true)} />
-      </Fab>
+      {isAuthenticated() ? (
+        <Fab color="primary" aria-label="add" style={fabStyle}>
+          <AddIcon onClick={handleAddPlan} />
+        </Fab>
+      ) : (
+        <Tooltip title="Please, login with Google first">
+          <Fab color="primary" aria-label="add" style={fabStyle}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+      )}
       <FormDialog
         handleClose={handleCloseModal}
         open={isModalOpen}
@@ -83,4 +98,10 @@ const Home = () => {
   );
 };
 
-export default withRouter(Home);
+export default withRouter(
+  React.forwardRef((props, ref) => (
+    <AuthContext.Consumer>
+      {context => <Home {...props} context={context} ref={ref} />}
+    </AuthContext.Consumer>
+  ))
+);
