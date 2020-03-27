@@ -1,11 +1,11 @@
 import http from "./BaseService";
 
-const loginWithGoogle = () => http.get('/auth/google');
 const logout = () => http.delete("/sessions");
 const register = data => http.post("/users", data);
+const getCurrentUser = () => http.get("/current_user");
 
 export default {
-  loginWithGoogle,
   logout,
-  register
+  register,
+  getCurrentUser
 };
