@@ -4,16 +4,29 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const StyledFavoriteIcon = styled(FavoriteIcon)`
-  color: ${({ isLiked }) => (isLiked ? "red" : "grey")};
+  color: ${({ liked }) => (liked ? "red" : "grey")};
 `;
+
+const LikeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  > button {
+    padding-left: 4px;
+  }
+  > span {
+    font-weight: bold;
+  }
+`;
+
 const Like = ({ totalLikes, isLiked, handleLike }) => {
+  console.log({ totalLikes, isLiked });
   return (
-    <>
+    <LikeWrapper>
       <span>{totalLikes}</span>
       <IconButton aria-label="add to favorites" onClick={handleLike}>
-        <StyledFavoriteIcon isLiked={isLiked} />
+        <StyledFavoriteIcon liked={isLiked} />
       </IconButton>
-    </>
+    </LikeWrapper>
   );
 };
 

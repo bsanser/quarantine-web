@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -17,10 +17,10 @@ import Tooltip from "./Tooltip";
 import LANGUAGES from "./../constants/languages";
 import CATEGORIES from "./../constants/categories";
 import { formatDifference, relativeDate } from "../utils/date-utils";
-
 import { truncateString, capitalizeAndSplit } from "../utils/string-utils";
 
 import { AuthContext } from "../contexts/AuthContext";
+import PlansService from "../services/PlansService";
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -36,90 +36,100 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     justifyContent: "space-between"
+  },
+  actionsWrapper: {
+    display: "flex"
   }
 }));
-const CardComponent = props => {
+
+const CardComponent = ({ context, ...props }) => {
   const classes = useStyles();
   const {
-    plan: { description, title, imageUrl, date, category, language }
+    plan: { id, description, title, imageUrl, date, category, language }
   } = props;
   const [isLiked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
+  const { isAuthenticated } = context;
+  const handleLike = () => {
+    if (isAuthenticated()) {
+      PlansService.likePlan(id).then(response => {
+        setTotalLikes(totalLikes + response.data.likes);
+        setLiked(response.data.isLiked);
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Get total number of likes of plan
+    PlansService.getTotalLikes(id).then(totalLikes =>
+      setTotalLikes(totalLikes.data)
+    );
+    // Get whether the user had already liked this plan
+    PlansService.getUserLikedPlan(id).then(isLiked => setLiked(isLiked.data));
+  }, [id]);
 
   return (
-    <AuthContext.Consumer>
-      {context => {
-        const { user, isAuthenticated } = context;
-        const handleLike = () => {
-          if (isAuthenticated()) {
-            setLiked(!isLiked);
-          }
-        };
-        return (
-          <Card className={classes.root}>
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="recipe"
-                  src={LANGUAGES[language.toLowerCase()]}
-                ></Avatar>
-              }
-              action={
-                <IconButton aria-label="settings">
-                  <MoreVertIcon />
-                </IconButton>
-              }
-              title={truncateString(title, 70)}
-              subheader={`${formatDifference(new Date(date), new Date(), {
-                addSuffix: true
-              })} - ${relativeDate(new Date(date), new Date())}`}
-            />
-            <CardMedia
-              className={classes.media}
-              image={imageUrl}
-              title="title"
-            />
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {description}
-              </Typography>
-            </CardContent>
-            <CardActions className={classes.actions} disableSpacing>
-              <Button
-                variant="text"
-                color="primary"
-                className={classes.button}
-                startIcon={CATEGORIES[capitalizeAndSplit(category)]}
-              >
-                {capitalizeAndSplit(category)}
-              </Button>
-              <div>
-                {isAuthenticated() ? (
-                  <Like
-                    totalLikes={totalLikes}
-                    isLiked={isLiked}
-                    handleLike={handleLike}
-                  ></Like>
-                ) : (
-                  <Tooltip title="Please, login with Google first">
-                    <Like
-                      totalLikes={0}
-                      isLiked={false}
-                      handleLike={handleLike}
-                    ></Like>
-                  </Tooltip>
-                )}
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Avatar
+            aria-label="recipe"
+            src={LANGUAGES[language.toLowerCase()]}
+          ></Avatar>
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={truncateString(title, 70)}
+        subheader={`${formatDifference(new Date(date), new Date(), {
+          addSuffix: true
+        })} - ${relativeDate(new Date(date), new Date())}`}
+      />
+      <CardMedia className={classes.media} image={imageUrl} title="title" />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {description}
+        </Typography>
+      </CardContent>
+      <CardActions className={classes.actions} disableSpacing>
+        <Button
+          variant="text"
+          color="primary"
+          className={classes.button}
+          startIcon={CATEGORIES[capitalizeAndSplit(category)]}
+        >
+          {capitalizeAndSplit(category)}
+        </Button>
+        <div className={classes.actionsWrapper}>
+          {isAuthenticated() ? (
+            <Like
+              totalLikes={totalLikes}
+              isLiked={isLiked}
+              handleLike={handleLike}
+            ></Like>
+          ) : (
+            <Tooltip title="Please, login with Google first">
+              <Like
+                totalLikes={totalLikes}
+                isLiked={false}
+                handleLike={handleLike}
+              ></Like>
+            </Tooltip>
+          )}
 
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
-              </div>
-            </CardActions>
-          </Card>
-        );
-      }}
-    </AuthContext.Consumer>
+          <IconButton aria-label="share">
+            <ShareIcon />
+          </IconButton>
+        </div>
+      </CardActions>
+    </Card>
   );
 };
 
-export default CardComponent;
+export default React.forwardRef((props, ref) => (
+  <AuthContext.Consumer>
+    {context => <CardComponent {...props} context={context} ref={ref} />}
+  </AuthContext.Consumer>
+));
