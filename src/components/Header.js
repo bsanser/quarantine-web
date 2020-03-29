@@ -74,7 +74,7 @@ const Header = ({ context, ...props }) => {
             <MenuIcon />
           </BlurOnIcon>
           <Typography variant="h6" className={classes.title}>
-            Quarantening
+            Quarantining
           </Typography>
         </BrandContainer>
 
@@ -112,12 +112,8 @@ const Header = ({ context, ...props }) => {
             </Menu>
           </div>
         ) : (
-          <StyledButton
-            as="a"
-            href="/auth/google"
-            color="inherit"
-          >
-            Login
+          <StyledButton as="a" href="/auth/google" color="inherit">
+            Login with Google
           </StyledButton>
         )}
       </Toolbar>

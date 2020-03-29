@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -11,8 +12,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Snackbar from "@material-ui/core/Snackbar";
 import Like from "./Like";
-import Tooltip from "./Tooltip";
 
 import LANGUAGES from "./../constants/languages";
 import CATEGORIES from "./../constants/categories";
@@ -39,8 +40,16 @@ const useStyles = makeStyles(theme => ({
   },
   actionsWrapper: {
     display: "flex"
+  },
+  snackbar: {
+    bottom: "600px"
   }
 }));
+
+const StyledButton = styled(Button)`
+  color: white;
+  text-decoration: none;
+`;
 
 const CardComponent = ({ context, ...props }) => {
   const classes = useStyles();
@@ -50,12 +59,15 @@ const CardComponent = ({ context, ...props }) => {
   const [isLiked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
   const { isAuthenticated } = context;
+  const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
   const handleLike = () => {
     if (isAuthenticated()) {
       PlansService.likePlan(id).then(response => {
         setTotalLikes(totalLikes + response.data.likes);
         setLiked(response.data.isLiked);
       });
+    } else {
+      setDisplayLoginAlert(true);
     }
   };
 
@@ -105,21 +117,31 @@ const CardComponent = ({ context, ...props }) => {
           {capitalizeAndSplit(category)}
         </Button>
         <div className={classes.actionsWrapper}>
-          {isAuthenticated() ? (
-            <Like
-              totalLikes={totalLikes}
-              isLiked={isLiked}
-              handleLike={handleLike}
-            ></Like>
-          ) : (
-            <Tooltip title="Please, login with Google first">
-              <Like
-                totalLikes={totalLikes}
-                isLiked={false}
-                handleLike={handleLike}
-              ></Like>
-            </Tooltip>
-          )}
+          <Snackbar
+            className={classes.snackbar}
+            key={`top,center`}
+            open={displayLoginAlert}
+            autoHideDuration={3000}
+            onClose={() => {
+              setDisplayLoginAlert(false);
+            }}
+            message="Please, log in with Google first"
+            action={
+              <StyledButton
+                as="a"
+                href="/auth/google"
+                color="inherit"
+                size="medium"
+              >
+                Login
+              </StyledButton>
+            }
+          />
+          <Like
+            totalLikes={totalLikes}
+            isLiked={isAuthenticated() ? isLiked : false}
+            handleLike={handleLike}
+          ></Like>
 
           <IconButton aria-label="share">
             <ShareIcon />
