@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Snackbar from "@material-ui/core/Snackbar";
 import Like from "./Like";
 
@@ -54,7 +54,7 @@ const StyledButton = styled(Button)`
 const CardComponent = ({ context, ...props }) => {
   const classes = useStyles();
   const {
-    plan: { id, description, title, imageUrl, date, category, language }
+    plan: { id, link, description, title, imageUrl, date, category, language }
   } = props;
   const [isLiked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
@@ -92,8 +92,8 @@ const CardComponent = ({ context, ...props }) => {
           ></Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+          <IconButton component="a" href={link} aria-label="go-to-link">
+            <VisibilityIcon />
           </IconButton>
         }
         title={truncateString(title, 70)}

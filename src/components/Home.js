@@ -25,7 +25,7 @@ const fabStyle = {
 
 const useStyles = makeStyles(theme => ({
   snackbar: {
-    top: "85px"
+    bottom: "60px"
   }
 }));
 
