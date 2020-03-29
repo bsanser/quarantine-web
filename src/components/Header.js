@@ -114,7 +114,7 @@ const Header = ({ context, ...props }) => {
         ) : (
           <StyledButton
             as="a"
-            href="//localhost:3001/auth/google"
+            href="/auth/google"
             color="inherit"
           >
             Login

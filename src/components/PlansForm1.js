@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import { Redirect } from "react-router-dom";
-import { replaceSpaceWithHyphens, replaceHyphensWithSpaces } from "./../utils/string-utils";
+import { replaceSpaceWithHyphens } from "./../utils/string-utils";
 
 import PlansService from "./../services/PlansService";
 import languages from "./../constants/languages";

@@ -65,8 +65,10 @@ const CardComponent = ({ context, ...props }) => {
       setTotalLikes(totalLikes.data)
     );
     // Get whether the user had already liked this plan
-    PlansService.getUserLikedPlan(id).then(isLiked => setLiked(isLiked.data));
-  }, [id]);
+    if (isAuthenticated()) {
+      PlansService.getUserLikedPlan(id).then(isLiked => setLiked(isLiked.data));
+    }
+  }, [id, isAuthenticated]);
 
   return (
     <Card className={classes.root}>
