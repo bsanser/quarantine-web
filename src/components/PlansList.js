@@ -25,9 +25,11 @@ const Wrapper = styled.div`
 const PlanList = ({ plans }) => {
   return (
     <Wrapper>
-      {plans.length !== 0 &&
-        plans.map(plan => <Card plan={plan} key={plan.id} />)}
-      <CircularProgress variant="determinate" />
+      {plans.length !== 0 ? (
+        plans.map(plan => <Card plan={plan} key={plan.id} />)
+      ) : (
+        <CircularProgress variant="determinate" />
+      )}
     </Wrapper>
   );
 };
