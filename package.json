@@ -2,6 +2,7 @@
   "name": "quarantine-web",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
     "@material-ui/core": "^4.9.7",
@@ -17,7 +18,6 @@
     "dotenv": "^8.2.0",
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
-    "http-proxy-middleware": "^0.21.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
