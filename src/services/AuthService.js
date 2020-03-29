@@ -1,8 +1,8 @@
-import http from "./BaseService";
+import axios from "axios";
 
-const logout = () => http.delete("/sessions");
-const register = data => http.post("/users", data);
-const getCurrentUser = () => http.get("/current_user");
+const logout = () => axios.get("api/logout");
+const register = data => axios.post("api/users", data);
+const getCurrentUser = () => axios.get("api/current_user");
 
 export default {
   logout,

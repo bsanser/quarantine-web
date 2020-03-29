@@ -1,6 +1,6 @@
-import http from "./BaseService";
+import axios from "axios";
 
-const getInfoFromUrl = url => http.get(`plans/url-info?url=${url}`);
+const getInfoFromUrl = url => axios.get(`api/plans/url-info?url=${url}`);
 
 export default {
   getInfoFromUrl
