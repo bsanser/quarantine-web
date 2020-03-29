@@ -221,7 +221,7 @@ const PlansForm = props => {
           </Select>
         </FormControl>
 
-        <Button variant="outlined" color="primary" type="submit">
+        <Button variant="contained" color="primary" type="submit">
           Send
         </Button>
       </Form>
