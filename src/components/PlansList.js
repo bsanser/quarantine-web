@@ -2,6 +2,7 @@ import React from "react";
 import Card from "./Card";
 import styled from "styled-components";
 import { device } from "./../styles/breakpoints";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Wrapper = styled.div`
   display: grid;
@@ -24,9 +25,10 @@ const Wrapper = styled.div`
 const PlanList = ({ plans }) => {
   return (
     <Wrapper>
-      {plans.map((plan, index) => (
+      {plans && plans.map((plan, index) => (
         <Card plan={plan} key={plan.id} />
       ))}
+      <CircularProgress variant="determinate"/>
     </Wrapper>
   );
 };
