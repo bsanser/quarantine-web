@@ -4,11 +4,11 @@
     "/**": "index.html"
   },
   "proxies": {
-    "/api/": {
-      "origin": "${API_URL}"
+    "/api": {
+      "origin": "${API_URL}/api"
     },
-    "/auth/google": {
-      "origin": "${API_URL}"
+    "/auth": {
+      "origin": "${API_URL}/auth"
     }
   }
 }
