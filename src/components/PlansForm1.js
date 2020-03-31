@@ -13,7 +13,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import { Redirect } from "react-router-dom";
-import { replaceSpaceWithHyphens } from "./../utils/string-utils";
+import {
+  replaceSpaceWithHyphens,
+  capitalizeString
+} from "./../utils/string-utils";
 
 import PlansService from "./../services/PlansService";
 import languages from "./../constants/languages";
@@ -26,11 +29,7 @@ const Container = styled.div`
   align-items: center;
   @media ${device.tablet} {
     width: 400px;
-    padding: 20px;
-  }
-  @media ${device.desktop} {
-    width: 400px;
-    padding: 20px;
+    padding: 40px;
   }
 `;
 
@@ -39,28 +38,35 @@ const Form = styled.form`
   flex-direction: column;
   color: white;
   margin: 0 auto;
+  padding-top: 12px;
+`;
+
+const FormHeader = styled.h1`
+  font-size: 20px;
+  color: black;
+  margin-bottom: 16px;
+`;
+
+const StyledInputLabel = styled(InputLabel)`
+  margin-bottom: 10px;
+  color: rgba(0, 0, 0, 0, 0.54);
+  font-size: 14px;
 `;
 
 const CategoriesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+
+  border-radius: 4px;
+  padding: 18.5px 14px;
+
   > div {
     padding: 2px;
     margin-right: 4px;
     margin-bottom: 4px;
   }
-`;
-
-const DateWrapper = styled.div`
-  margin-bottom: 16px;
-  > div {
-    width: 100%;
-  }
-`;
-
-const LinkWrapper = styled.div`
-  margin-bottom: 16px;
 `;
 
 const OptionWrapper = styled.div`
@@ -70,6 +76,14 @@ const OptionWrapper = styled.div`
     margin-right: 10px;
   }
 `;
+
+const StyledSelect = styled(Select)`
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  padding: 10px 8px;
+  margin-bottom: 16px;
+`;
+
 const useStyles = makeStyles(theme => ({
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -77,14 +91,11 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     marginBottom: "16px"
   },
-  select: {
-    background: "transparent"
+  datePicker: {
+    border: "1px solid grey",
+    borderRadius: "4px"
   }
 }));
-
-const StyledInputLabel = styled(InputLabel)`
-  margin-bottom: 10px;
-`;
 
 const PlansForm = props => {
   const classes = useStyles();
@@ -149,23 +160,30 @@ const PlansForm = props => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <TextField
-          id="title"
-          label="Title"
-          name="title"
-          value={title}
-          onChange={handleChangeTitle}
-          required
-        />
-        <TextField
-          name="description"
-          id="description"
-          label="Description"
-          value={description}
-          onChange={handleChangeDescription}
-          multiline
-        />
-        <LinkWrapper>
+        <FormHeader>Add a plan:</FormHeader>
+        <FormControl className={classes.formControl}>
+          <TextField
+            id="title"
+            label="Title"
+            name="title"
+            value={title}
+            onChange={handleChangeTitle}
+            variant="outlined"
+            required
+          />
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <TextField
+            name="description"
+            id="description"
+            label="Description"
+            value={description}
+            onChange={handleChangeDescription}
+            multiline
+            variant="outlined"
+          />
+        </FormControl>
+        <FormControl className={classes.formControl}>
           <TextField
             name="link"
             id="link"
@@ -173,16 +191,16 @@ const PlansForm = props => {
             value={link}
             onChange={handleChangeLink}
             required
+            variant="outlined"
           />
-        </LinkWrapper>
-
-        <DateWrapper>
+        </FormControl>
+        <FormControl className={classes.formControl}>
           <DatePicker date={date} handleChangeDate={handleChangeDate} />
-        </DateWrapper>
+        </FormControl>
+
         <StyledInputLabel>Category*</StyledInputLabel>
         <CategoriesWrapper>
           {Object.entries(CATEGORIES).map(c => {
-            console.log(category, c[0])
             return (
               <Chip
                 key={c[0]}
@@ -192,34 +210,36 @@ const PlansForm = props => {
                 clickable
                 color="primary"
                 onClick={e => handleChangeCategory(e, c[0])}
-                variant={category === replaceSpaceWithHyphens(c[0]) ? "default" : "outlined"}
+                variant={
+                  category === replaceSpaceWithHyphens(c[0])
+                    ? "default"
+                    : "outlined"
+                }
               />
             );
           })}
         </CategoriesWrapper>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="demo-simple-select-label">Language</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={language}
-            onChange={handleChangeLanguage}
-            className={classes.select}
-          >
-            {Object.entries(languages).map(entry => (
-              <MenuItem value={entry[0]} key={entry[0]}>
-                <OptionWrapper>
-                  <Avatar
-                    alt={`flag-${entry[0].toLowerCase()}`}
-                    src={entry[1]}
-                    className={classes.small}
-                  />
-                  {entry[0]}
-                </OptionWrapper>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+
+        <StyledInputLabel>Language</StyledInputLabel>
+        <StyledSelect
+          id="demo-simple-select"
+          value={language}
+          onChange={handleChangeLanguage}
+          className={classes.select}
+        >
+          {Object.entries(languages).map(entry => (
+            <MenuItem value={entry[0]} key={entry[0]}>
+              <OptionWrapper>
+                <Avatar
+                  alt={`flag-${entry[0].toLowerCase()}`}
+                  src={entry[1]}
+                  className={classes.small}
+                />
+                {capitalizeString(entry[0])}
+              </OptionWrapper>
+            </MenuItem>
+          ))}
+        </StyledSelect>
 
         <Button variant="contained" color="primary" type="submit">
           Send

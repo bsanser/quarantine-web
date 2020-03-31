@@ -14,7 +14,8 @@ import { capitalizeString } from "./../utils/string-utils";
 const FiltersContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 0 16px;
+  margin-bottom: 16px;
 `;
 
 const StyledFormControl = styled(FormControl)`
