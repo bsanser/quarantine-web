@@ -6,7 +6,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Wrapper = styled.div`
   display: grid;
-  padding: 16px;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   @media ${device.tablet} {

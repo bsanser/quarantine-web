@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
+import Tooltip from '@material-ui/core/Tooltip';
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -14,7 +15,6 @@ import { capitalizeString } from "./../utils/string-utils";
 const FiltersContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 0 16px;
   margin-bottom: 16px;
 `;
 
@@ -40,6 +40,7 @@ const FiltersList = ({
   const classes = useStyles();
   return (
     <FiltersContainer>
+      <Tooltip title="Working soon" arrow>
       <Button
         variant={today === "all" ? "outlined" : "contained"}
         color="primary"
@@ -48,6 +49,7 @@ const FiltersList = ({
       >
         Today
       </Button>
+      </Tooltip>
       <StyledFormControl variant="outlined">
         <InputLabel htmlFor="category-select">Category</InputLabel>
         <Select

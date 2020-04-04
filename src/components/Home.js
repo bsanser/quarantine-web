@@ -45,10 +45,13 @@ const Home = ({ context }) => {
   const { isAuthenticated } = context;
   const classes = useStyles();
 
-  const handleFilterByToday = () =>
+  const handleFilterByToday = () => {
+    console.log(new Date().toISOString());
+    console.log(formatToISO(new Date()));
     todayFilter === "all"
-      ? setTodayFilter(formatToISO(new Date()))
+      ? setTodayFilter(new Date().toISOString())
       : setTodayFilter("all");
+  };
 
   const handleApplyFilter = event => {
     const { name, value } = event.target;
