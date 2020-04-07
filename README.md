@@ -1,11 +1,10 @@
-This project has been created with Create React App. It is the front-end side of the quarantine app, an web-app made with the MERN stack.
-
-The web app is an events app but with the particularity that all events need to be free and online. 
-
-
-The app is already deployed to production here: https://quarantine-web.herokuapp.com/home
+The app is already deployed to production here: https://quarantine-web.herokuapp.com/home (if it seems not to be working is just because heroku's servers go into sleep mode after a certain period of no use - just try it again :) ).
 
 To start the development server in the local environment: ```npm start```
+
+This project has been created with Create React App. This repo contains the client side of the quarantine app, a web-app made with the MERN stack. Here is the api repo: https://github.com/bsanser/quarantine-api.
+
+The web app is an events app but with the particularity that all events need to be free and online. 
 
 
 ### Why this app? ###
@@ -37,6 +36,7 @@ Users can, so far:
 - Download ics of the plan to add it to your calendar (so that you can be reminded before it starts)
 - Edit and delete plans (the endpoints are already created, but the client is not yet using them)
 - Separate upcoming plans from past plans
+- Localize app, and allow users to choose the language of the app
 - Onboarding explaining what the app is for and how to use it
 - Integrate with google analytics
 - Perform e2e tests with Cypress
