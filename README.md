@@ -29,7 +29,7 @@ Users can, so far:
 - filter plans by category, language or date(the date filter is not yet implemented)
 - like a plan (so that it is stored in his "Liked plans")
 - create a plan
-- localized times (the date/time of the event is entered by the user using his own timezone - In the db, though, it is stored as UTC 0. To render it to the client, it will get the client's timezone and display the proper date/time accordingly.
+- see the plans' times adjusted to his timezone (the date/time of the event is entered by the user using his own timezone - In the database, though, it is stored as UTC 0. To render it to the client, it will get the client's timezone and display the proper date/time accordingly).
 
 ### Coming soon features ###
 - Share a plan
