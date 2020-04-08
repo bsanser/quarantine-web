@@ -17,7 +17,7 @@ import { DateTimePicker } from "@material-ui/pickers";
 import { Redirect } from "react-router-dom";
 import {
   replaceSpaceWithHyphens,
-  capitalizeString
+  capitalizeString,
 } from "./../utils/string-utils";
 
 import PlansService from "./../services/PlansService";
@@ -98,15 +98,15 @@ const ButtonsContainer = styled.div`
   }
 `;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   selectEmpty: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   formControl: {
-    marginBottom: "16px"
+    marginBottom: "16px",
   },
   wrapper: {
-    position: "relative"
+    position: "relative",
   },
   buttonProgress: {
     color: theme.primary,
@@ -114,11 +114,11 @@ const useStyles = makeStyles(theme => ({
     top: "50%",
     left: "50%",
     marginTop: -12,
-    marginLeft: -12
-  }
+    marginLeft: -12,
+  },
 }));
 
-const PlansForm = props => {
+const PlansForm = (props) => {
   const classes = useStyles();
   const urlInfo = props.location.state;
   const [formState, setFormState] = useState({
@@ -130,16 +130,16 @@ const PlansForm = props => {
     language: "",
     imageUrl:
       (urlInfo && urlInfo.image && urlInfo.image.url) ||
-      "https://images.unsplash.com/photo-1504541989296-167df755af3f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+      "https://images.unsplash.com/photo-1504541989296-167df755af3f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
   });
 
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const validateForm = formState => {
+  const validateForm = (formState) => {
     let newErrors = {};
-    Object.keys(formState).forEach(field => {
+    Object.keys(formState).forEach((field) => {
       if (!formState[field] || formState[field].length === 0) {
         newErrors[field] = true;
       }
@@ -152,11 +152,11 @@ const PlansForm = props => {
     return <Redirect to="/home" />;
   }
 
-  const handleChangeInput = event => {
+  const handleChangeInput = (event) => {
     const newState = { ...formState, [event.target.name]: event.target.value };
     setFormState(newState);
   };
-  const handleChangeDate = value => {
+  const handleChangeDate = (value) => {
     const newState = { ...formState, date: value };
     setFormState(newState);
   };
@@ -164,17 +164,17 @@ const PlansForm = props => {
   const handleChangeCategory = (_event, categoryItem) => {
     const newState = {
       ...formState,
-      category: replaceSpaceWithHyphens(categoryItem)
+      category: replaceSpaceWithHyphens(categoryItem),
     };
     setFormState(newState);
   };
 
-  const handleChangeLanguage = event => {
+  const handleChangeLanguage = (event) => {
     const newState = { ...formState, language: event.target.value };
     setFormState(newState);
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     const {
       date,
       title,
@@ -182,7 +182,7 @@ const PlansForm = props => {
       link,
       category,
       language,
-      imageUrl
+      imageUrl,
     } = formState;
     event.preventDefault();
     validateForm(formState);
@@ -195,13 +195,13 @@ const PlansForm = props => {
         link,
         category: category.toLowerCase(),
         language,
-        imageUrl
+        imageUrl,
       }).then(
         () => {
           setIsSubmitting(false);
           setRedirectToHome(true);
         },
-        error => {
+        (error) => {
           console.error(error);
         }
       );
@@ -257,7 +257,6 @@ const PlansForm = props => {
             disablePast
             onChange={handleChangeDate}
             label="Date and time of the plan"
-            showTodayButton
             error={errors["date"]}
             helperText={errors["date"] ? "The date is required" : ""}
           />
@@ -267,7 +266,7 @@ const PlansForm = props => {
           Category*
         </StyledInputLabel>
         <CategoriesWrapper hasError={errors["category"]}>
-          {Object.entries(CATEGORIES).map(c => {
+          {Object.entries(CATEGORIES).map((c) => {
             return (
               <Chip
                 key={c[0]}
@@ -276,7 +275,7 @@ const PlansForm = props => {
                 label={c[0]}
                 clickable
                 color="primary"
-                onClick={e => handleChangeCategory(e, c[0])}
+                onClick={(e) => handleChangeCategory(e, c[0])}
                 variant={
                   formState.category === replaceSpaceWithHyphens(c[0])
                     ? "default"
@@ -301,7 +300,7 @@ const PlansForm = props => {
           className={classes.select}
           hasError={errors["language"]}
         >
-          {Object.entries(languages).map(entry => (
+          {Object.entries(languages).map((entry) => (
             <MenuItem value={entry[0]} key={entry[0]}>
               <OptionWrapper>
                 <Avatar
@@ -331,12 +330,16 @@ const PlansForm = props => {
             Cancel
           </Button>
           <div className={classes.wrapper}>
-          <Button variant={isSubmitting?"outlined":"contained"} color="primary" type="submit">
-            Send
-          </Button>
-          {isSubmitting && (
-            <CircularProgress size={24} className={classes.buttonProgress} />
-          )}
+            <Button
+              variant={isSubmitting ? "outlined" : "contained"}
+              color="primary"
+              type="submit"
+            >
+              Send
+            </Button>
+            {isSubmitting && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
           </div>
         </ButtonsContainer>
       </Form>

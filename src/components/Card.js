@@ -11,7 +11,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ShareIcon from "@material-ui/icons/Share";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import Snackbar from "@material-ui/core/Snackbar";
 import Like from "./Like";
 
@@ -23,27 +24,28 @@ import { truncateString, capitalizeAndSplit } from "../utils/string-utils";
 import { AuthContext } from "../contexts/AuthContext";
 import PlansService from "../services/PlansService";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   media: {
     height: 0,
-    paddingTop: "56.25%" // 16:9
+    paddingTop: "56.25%", // 16:9
   },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
     transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest
-    })
+      duration: theme.transitions.duration.shortest,
+    }),
   },
   actions: {
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   actionsWrapper: {
-    display: "flex"
+    display: "flex",
+    alignItems: "center",
   },
   snackbar: {
-    bottom: "600px"
-  }
+    bottom: "600px",
+  },
 }));
 
 const StyledButton = styled(Button)`
@@ -51,10 +53,16 @@ const StyledButton = styled(Button)`
   text-decoration: none;
 `;
 
+const StyledGetAppIcon = styled(GetAppIcon)`
+  color: grey;
+  font-size: "medium";
+  margin-right: 8px;
+`;
+
 const CardComponent = ({ context, ...props }) => {
   const classes = useStyles();
   const {
-    plan: { id, link, description, title, imageUrl, date, category, language }
+    plan: { id, link, description, title, imageUrl, date, category, language },
   } = props;
   const [isLiked, setLiked] = useState(false);
   const [totalLikes, setTotalLikes] = useState(0);
@@ -62,7 +70,7 @@ const CardComponent = ({ context, ...props }) => {
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
   const handleLike = () => {
     if (isAuthenticated()) {
-      PlansService.likePlan(id).then(response => {
+      PlansService.likePlan(id).then((response) => {
         setTotalLikes(totalLikes + response.data.likes);
         setLiked(response.data.isLiked);
       });
@@ -73,12 +81,14 @@ const CardComponent = ({ context, ...props }) => {
 
   useEffect(() => {
     // Get total number of likes of plan
-    PlansService.getTotalLikes(id).then(totalLikes =>
+    PlansService.getTotalLikes(id).then((totalLikes) =>
       setTotalLikes(totalLikes.data)
     );
     // Get whether the user had already liked this plan
     if (isAuthenticated()) {
-      PlansService.getUserLikedPlan(id).then(isLiked => setLiked(isLiked.data));
+      PlansService.getUserLikedPlan(id).then((isLiked) =>
+        setLiked(isLiked.data)
+      );
     }
   }, [id, isAuthenticated]);
 
@@ -98,7 +108,7 @@ const CardComponent = ({ context, ...props }) => {
         }
         title={truncateString(title, 70)}
         subheader={`${formatDifference(new Date(date), new Date(), {
-          addSuffix: true
+          addSuffix: true,
         })} - ${relativeDate(new Date(date), new Date())}`}
       />
       <CardMedia className={classes.media} image={imageUrl} title="title" />
@@ -117,6 +127,7 @@ const CardComponent = ({ context, ...props }) => {
           {capitalizeAndSplit(category)}
         </Button>
         <div className={classes.actionsWrapper}>
+          <StyledGetAppIcon />
           <Snackbar
             className={classes.snackbar}
             key={`top,center`}
@@ -154,6 +165,6 @@ const CardComponent = ({ context, ...props }) => {
 
 export default React.forwardRef((props, ref) => (
   <AuthContext.Consumer>
-    {context => <CardComponent {...props} context={context} ref={ref} />}
+    {(context) => <CardComponent {...props} context={context} ref={ref} />}
   </AuthContext.Consumer>
 ));

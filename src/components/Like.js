@@ -12,6 +12,7 @@ const LikeWrapper = styled.div`
   align-items: center;
   > button {
     padding-left: 4px;
+    padding-right: 4px;
   }
   > span {
     font-weight: bold;
@@ -21,10 +22,10 @@ const LikeWrapper = styled.div`
 const Like = ({ totalLikes, isLiked, handleLike }) => {
   return (
     <LikeWrapper>
-      <span>{totalLikes}</span>
       <IconButton aria-label="add to favorites" onClick={handleLike}>
         <StyledFavoriteIcon liked={isLiked.toString()} />
       </IconButton>
+      <span>{totalLikes}</span>
     </LikeWrapper>
   );
 };
