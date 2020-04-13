@@ -8,6 +8,7 @@ import NotFound from "./NotFound";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import AuthContextProvider from "./../contexts/AuthContext";
+import BottomNavigation from "./BottomNavigation";
 
 class App extends Component {
   render() {
@@ -29,6 +30,7 @@ class App extends Component {
                 <Route path="/" component={NotFound} />
               </Switch>
             </main>
+            <BottomNavigation />
           </MuiPickersUtilsProvider>
         </AuthContextProvider>
       </div>

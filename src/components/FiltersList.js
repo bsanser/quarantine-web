@@ -1,8 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import Tooltip from '@material-ui/core/Tooltip';
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { DateTimePicker } from "@material-ui/pickers";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -24,75 +25,65 @@ const StyledFormControl = styled(FormControl)`
   }
 `;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   select: {
-    background: "transparent"
-  }
+    background: "transparent",
+  },
 }));
 
-const FiltersList = ({
-  handleApplyFilter,
-  handleFilterByToday,
-  today,
-  category,
-  language
-}) => {
+const FiltersList = ({ handleApplyFilter, category, language, from, to }) => {
   const classes = useStyles();
   return (
     <FiltersContainer>
-      <Tooltip title="Working soon" arrow>
-      <Button
-        variant={today === "all" ? "outlined" : "contained"}
-        color="primary"
-        name="today"
-        onClick={handleFilterByToday}
-      >
-        Today
-      </Button>
-      </Tooltip>
+      <DateTimePicker
+        value={{ from, to }}
+        inputVariant="outlined"
+        disablePast
+        onChange={handleApplyFilter}
+        label="Date"
+      />
+
       <StyledFormControl variant="outlined">
-        <InputLabel htmlFor="category-select">Category</InputLabel>
+        <InputLabel id="outlined-category-native-simple">Category</InputLabel>
         <Select
-          native
           value={category}
           onChange={handleApplyFilter}
           label="Category"
           inputProps={{
             name: "category",
-            id: "outlined-category-native-simple"
+            id: "outlined-category-native-simple",
           }}
-          className={classes.select}
         >
-          <option aria-label="None" value="all">
-            All
-          </option>
-          {Object.keys(CATEGORIES).map(cat => (
-            <option key={cat} value={cat}>
+          <MenuItem value="">
+            <em>All</em>
+          </MenuItem>
+          {Object.keys(CATEGORIES).map((cat) => (
+            <MenuItem key={cat} value={cat}>
               {cat}
-            </option>
+            </MenuItem>
           ))}
         </Select>
       </StyledFormControl>
-      <StyledFormControl variant="outlined">
-        <InputLabel htmlFor="language-select">Language</InputLabel>
+      <StyledFormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">Language</InputLabel>
         <Select
-          native
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
           value={language}
           onChange={handleApplyFilter}
           label="Language"
           inputProps={{
             name: "language",
-            id: "outlined-language-native-simple"
+            id: "outlined-language-native-simple",
           }}
-          className={classes.select}
         >
-          <option aria-label="None" value="all">
-            All
-          </option>
-          {Object.keys(LANGUAGES).map(lang => (
-            <option key={lang} value={lang}>
+          <MenuItem value="">
+            <em>All</em>
+          </MenuItem>
+          {Object.keys(LANGUAGES).map((lang) => (
+            <MenuItem key={lang} value={lang}>
               {capitalizeString(lang)}
-            </option>
+            </MenuItem>
           ))}
         </Select>
       </StyledFormControl>

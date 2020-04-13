@@ -18,15 +18,15 @@ const fabStyle = {
   margin: 0,
   top: "auto",
   right: 20,
-  bottom: 20,
+  bottom: 100,
   left: "auto",
-  position: "fixed"
+  position: "fixed",
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   snackbar: {
-    bottom: "60px"
-  }
+    bottom: "60px",
+  },
 }));
 
 const StyledButton = styled(Button)`
@@ -38,22 +38,15 @@ const Home = ({ context }) => {
   // console.log(formatToISO(new Date())); //2020-03-26T13:45:56Z
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [todayFilter, setTodayFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [languageFilter, setLanguageFilter] = useState("all");
+  const [fromFilter, setFromFilter] = useState(null);
+  const [toFilter, setToFilter] = useState(null);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("");
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
   const { isAuthenticated } = context;
   const classes = useStyles();
 
-  const handleFilterByToday = () => {
-    console.log(new Date().toISOString());
-    console.log(formatToISO(new Date()));
-    todayFilter === "all"
-      ? setTodayFilter(new Date().toISOString())
-      : setTodayFilter("all");
-  };
-
-  const handleApplyFilter = event => {
+  const handleApplyFilter = (event) => {
     const { name, value } = event.target;
     // eslint-disable-next-line default-case
     switch (name) {
@@ -80,25 +73,32 @@ const Home = ({ context }) => {
 
   useEffect(() => {
     const fetchPlans = () => {
-      PlansService.getPlans({
-        date: todayFilter,
-        category: categoryFilter.toLowerCase(),
-        language: languageFilter
-      }).then(response => {
+      let filter = {
+        from: fromFilter,
+        to: toFilter,
+      };
+      if (categoryFilter) {
+        filter = { ...filter, category: categoryFilter.toLowerCase() };
+      }
+      if (languageFilter) {
+        filter = { ...filter, language: languageFilter.toLowerCase() };
+      }
+      PlansService.getPlans(filter).then((response) => {
         setPlans(response.data);
       });
     };
+
     fetchPlans();
-  }, [categoryFilter, todayFilter, languageFilter]);
+  }, [categoryFilter, fromFilter, toFilter, languageFilter]);
 
   return (
     <div className="Home">
       <FiltersList
         handleApplyFilter={handleApplyFilter}
-        handleFilterByToday={handleFilterByToday}
         category={categoryFilter}
         language={languageFilter}
-        today={todayFilter}
+        from={fromFilter}
+        to={toFilter}
       ></FiltersList>
       <PlansList plans={plans} />
       <Snackbar
@@ -137,7 +137,7 @@ const Home = ({ context }) => {
 export default withRouter(
   React.forwardRef((props, ref) => (
     <AuthContext.Consumer>
-      {context => <Home {...props} context={context} ref={ref} />}
+      {(context) => <Home {...props} context={context} ref={ref} />}
     </AuthContext.Consumer>
   ))
 );
