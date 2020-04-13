@@ -59,6 +59,10 @@ const Home = ({ context }) => {
     }
   };
 
+  const handleChangeDate = (value) => {
+    setFromFilter(value);
+  };
+
   const handleAddPlan = () => {
     if (isAuthenticated()) {
       setModalOpen(true);
@@ -83,13 +87,14 @@ const Home = ({ context }) => {
       if (languageFilter) {
         filter = { ...filter, language: languageFilter.toLowerCase() };
       }
+      console.log(filter);
       PlansService.getPlans(filter).then((response) => {
         setPlans(response.data);
       });
     };
 
     fetchPlans();
-  }, [categoryFilter, fromFilter, toFilter, languageFilter]);
+  }, [categoryFilter, fromFilter, languageFilter, toFilter]);
 
   return (
     <div className="Home">
@@ -97,6 +102,7 @@ const Home = ({ context }) => {
         handleApplyFilter={handleApplyFilter}
         category={categoryFilter}
         language={languageFilter}
+        handleChangeDate={handleChangeDate}
         from={fromFilter}
         to={toFilter}
       ></FiltersList>

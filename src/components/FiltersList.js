@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { DateTimePicker } from "@material-ui/pickers";
+import { DatePicker } from "@material-ui/pickers";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -31,16 +31,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FiltersList = ({ handleApplyFilter, category, language, from, to }) => {
+const FiltersList = ({
+  handleApplyFilter,
+  handleChangeDate,
+  category,
+  language,
+  from,
+}) => {
   const classes = useStyles();
   return (
     <FiltersContainer>
-      <DateTimePicker
-        value={{ from, to }}
+      <DatePicker
+        value={from}
         inputVariant="outlined"
         disablePast
-        onChange={handleApplyFilter}
+        onChange={handleChangeDate}
         label="Date"
+        clearable
       />
 
       <StyledFormControl variant="outlined">
