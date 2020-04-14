@@ -9,10 +9,10 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
-import FormDialog from "./Dialog";
-import FiltersList from "./FiltersList";
-import PlansList from "./PlansList";
-import BottomNavigation from "./BottomNavigation";
+import FormDialog from "./../components/Dialog";
+import FiltersList from "./../components/FiltersList";
+import PlansList from "./../components/PlansList";
+import BottomNavigation from "./../components/BottomNavigation";
 
 
 const StyledButton = styled(Button)`
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({ context }) => {
+const AllPlansPage = ({ context }) => {
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [fromFilter, setFromFilter] = useState(null);
@@ -95,7 +95,7 @@ const Home = ({ context }) => {
       if (languageFilter) {
         filter = { ...filter, language: languageFilter.toLowerCase() };
       }
-      PlansService.getPlans(filter).then((response) => {
+      PlansService.getAllPlans(filter).then((response) => {
         setPlans(response.data);
       });
     };
@@ -107,7 +107,7 @@ const Home = ({ context }) => {
     <>
       <div className={classes.homeWrapper}>
       <Typography variant="h1" className={classes.heading}>
-       Upcoming activities
+       All activities
       </Typography>
         <FiltersList
           handleApplyFilter={handleApplyFilter}
@@ -156,7 +156,7 @@ const Home = ({ context }) => {
 export default withRouter(
   React.forwardRef((props, ref) => (
     <AuthContext.Consumer>
-      {(context) => <Home {...props} context={context} ref={ref} />}
+      {(context) => <AllPlansPage {...props} context={context} ref={ref} />}
     </AuthContext.Consumer>
   ))
 );

@@ -19,16 +19,14 @@ import AuthService from "./../services/AuthService";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    padding: "0 16px"
+    padding: "0 16px",
+    backgroundColor: theme.palette.terciary.main
   },
   logoButton: {
     marginRight: theme.spacing(2)
   },
   faceButton: {
     paddingRight: "0"
-  },
-  title: {
-    flexGrow: 1
   },
   toolbar: {
     display: "flex",
@@ -42,7 +40,8 @@ const BrandContainer = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  color: white;
+  color: black;
+  font-weight: 800;
   text-decoration: none;
 `;
 
@@ -59,6 +58,7 @@ const Header = ({ context, ...props }) => {
   const handleLogout = () => {
     AuthService.logout().then(user => onUserChange(user));
   };
+  
 
   return (
     <AppBar position="static" className={classes.appBar}>
@@ -73,9 +73,6 @@ const Header = ({ context, ...props }) => {
           >
             <MenuIcon />
           </BlurOnIcon>
-          <Typography variant="h6" className={classes.title}>
-            Quarantining
-          </Typography>
         </BrandContainer>
 
         {isAuthenticated() ? (

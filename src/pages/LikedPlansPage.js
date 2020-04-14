@@ -3,17 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import PlansService from "./../services/PlansService";
+import PlansService from "../services/PlansService";
 import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
-import FormDialog from "./Dialog";
-import FiltersList from "./FiltersList";
-import PlansList from "./PlansList";
-import BottomNavigation from "./BottomNavigation";
-
+import FormDialog from "../components/Dialog";
+import PlansList from "../components/PlansList";
+import BottomNavigation from "../components/BottomNavigation";
 
 const StyledButton = styled(Button)`
   color: white;
@@ -23,7 +21,7 @@ const StyledButton = styled(Button)`
 const useStyles = makeStyles((theme) => ({
   homeWrapper: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(5)
+    paddingBottom: theme.spacing(5),
   },
   snackbar: {
     bottom: "60px",
@@ -39,37 +37,16 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     bottom: theme.spacing(12),
     right: theme.spacing(4),
-    position: "fixed"
+    position: "fixed",
   },
 }));
 
-const Home = ({ context }) => {
+const LikedPlansPage = ({ context }) => {
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [fromFilter, setFromFilter] = useState(null);
-  const [toFilter, setToFilter] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [languageFilter, setLanguageFilter] = useState("");
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
   const { isAuthenticated } = context;
   const classes = useStyles();
-
-  const handleApplyFilter = (event) => {
-    const { name, value } = event.target;
-    // eslint-disable-next-line default-case
-    switch (name) {
-      case "category":
-        setCategoryFilter(value);
-        break;
-      case "language":
-        setLanguageFilter(value);
-        break;
-    }
-  };
-
-  const handleChangeDate = (value) => {
-    setFromFilter(value);
-  };
 
   const handleAddPlan = () => {
     if (isAuthenticated()) {
@@ -84,40 +61,21 @@ const Home = ({ context }) => {
   };
 
   useEffect(() => {
-    const fetchPlans = () => {
-      let filter = {
-        from: fromFilter,
-        to: toFilter,
-      };
-      if (categoryFilter) {
-        filter = { ...filter, category: categoryFilter.toLowerCase() };
-      }
-      if (languageFilter) {
-        filter = { ...filter, language: languageFilter.toLowerCase() };
-      }
-      PlansService.getPlans(filter).then((response) => {
-        setPlans(response.data);
-      });
-    };
+    PlansService.getLikedPlans().then((response) => {
+      setPlans(response.data);
+    });
+  }, []);
 
-    fetchPlans();
-  }, [categoryFilter, fromFilter, languageFilter, toFilter]);
+  //TO DO: Handle loading state, not-authenthicated user, authenticated user but no favs.
 
   return (
     <>
       <div className={classes.homeWrapper}>
-      <Typography variant="h1" className={classes.heading}>
-       Upcoming activities
-      </Typography>
-        <FiltersList
-          handleApplyFilter={handleApplyFilter}
-          category={categoryFilter}
-          language={languageFilter}
-          handleChangeDate={handleChangeDate}
-          from={fromFilter}
-          to={toFilter}
-        ></FiltersList>
-        <PlansList plans={plans} />
+        <Typography variant="h1" className={classes.heading}>
+          Your favourite
+        </Typography>
+        {plans.length === 0 && <div>You don't have favourites yet.</div>}
+        {plans.length > 0 && <PlansList plans={plans} />}
         <Snackbar
           className={classes.snackbar}
           key={`top,center`}
@@ -156,7 +114,7 @@ const Home = ({ context }) => {
 export default withRouter(
   React.forwardRef((props, ref) => (
     <AuthContext.Consumer>
-      {(context) => <Home {...props} context={context} ref={ref} />}
+      {(context) => <LikedPlansPage {...props} context={context} ref={ref} />}
     </AuthContext.Consumer>
   ))
 );
