@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import PlansService from "./../services/PlansService";
@@ -13,17 +12,12 @@ import FormDialog from "./../components/Dialog";
 import FiltersList from "./../components/FiltersList";
 import PlansList from "./../components/PlansList";
 import BottomNavigation from "./../components/BottomNavigation";
-
-
-const StyledButton = styled(Button)`
-  color: white;
-  text-decoration: none;
-`;
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   homeWrapper: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(5)
+    paddingBottom: theme.spacing(5),
   },
   snackbar: {
     bottom: "60px",
@@ -39,7 +33,15 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     bottom: theme.spacing(12),
     right: theme.spacing(4),
-    position: "fixed"
+    position: "fixed",
+  },
+  loaderWrapper: {
+    width: "100px",
+    margin: "auto",
+  },
+  loginButton: {
+    color: "white",
+    textDecoration: "none",
   },
 }));
 
@@ -51,6 +53,7 @@ const AllPlansPage = ({ context }) => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [languageFilter, setLanguageFilter] = useState("");
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const { isAuthenticated } = context;
   const classes = useStyles();
 
@@ -84,6 +87,7 @@ const AllPlansPage = ({ context }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchPlans = () => {
       let filter = {
         from: fromFilter,
@@ -95,8 +99,10 @@ const AllPlansPage = ({ context }) => {
       if (languageFilter) {
         filter = { ...filter, language: languageFilter.toLowerCase() };
       }
+
       PlansService.getAllPlans(filter).then((response) => {
         setPlans(response.data);
+        setLoading(false);
       });
     };
 
@@ -106,9 +112,10 @@ const AllPlansPage = ({ context }) => {
   return (
     <>
       <div className={classes.homeWrapper}>
-      <Typography variant="h1" className={classes.heading}>
-       All activities
-      </Typography>
+        <Typography variant="h1" className={classes.heading}>
+          All activities
+        </Typography>
+
         <FiltersList
           handleApplyFilter={handleApplyFilter}
           category={categoryFilter}
@@ -117,7 +124,13 @@ const AllPlansPage = ({ context }) => {
           from={fromFilter}
           to={toFilter}
         ></FiltersList>
-        <PlansList plans={plans} />
+        {plans.length === 0 && isLoading && (
+          <div className={classes.loaderWrapper}>
+            <CircularProgress color="secondary" size={80} />
+          </div>
+        )}
+
+        {plans.length > 0 && !isLoading && <PlansList plans={plans} />}
         <Snackbar
           className={classes.snackbar}
           key={`top,center`}
@@ -128,14 +141,15 @@ const AllPlansPage = ({ context }) => {
           }}
           message="Please, log in with Google first"
           action={
-            <StyledButton
+            <Button
               as="a"
               href="/auth/google"
               color="inherit"
               size="medium"
+              className={classes.loginButton}
             >
               Login
-            </StyledButton>
+            </Button>
           }
         />
 

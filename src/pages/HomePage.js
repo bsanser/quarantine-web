@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import PlansService from "./../services/PlansService";
+import PlansService from "../services/PlansService";
 import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
-import FormDialog from "./Dialog";
-import FiltersList from "./FiltersList";
-import PlansList from "./PlansList";
-import BottomNavigation from "./BottomNavigation";
-
-
-const StyledButton = styled(Button)`
-  color: white;
-  text-decoration: none;
-`;
+import FormDialog from "../components/Dialog";
+import FiltersList from "../components/FiltersList";
+import PlansList from "../components/PlansList";
+import BottomNavigation from "../components/BottomNavigation";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   homeWrapper: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(5)
+    paddingBottom: theme.spacing(5),
   },
   snackbar: {
     bottom: "60px",
@@ -39,7 +33,15 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     bottom: theme.spacing(12),
     right: theme.spacing(4),
-    position: "fixed"
+    position: "fixed",
+  },
+  loaderWrapper: {
+    width: "100px",
+    margin: "auto",
+  },
+  loginButton: {
+    color: "white",
+    textDecoration: "none",
   },
 }));
 
@@ -51,6 +53,7 @@ const Home = ({ context }) => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [languageFilter, setLanguageFilter] = useState("");
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const { isAuthenticated } = context;
   const classes = useStyles();
 
@@ -84,6 +87,7 @@ const Home = ({ context }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchPlans = () => {
       let filter = {
         from: fromFilter,
@@ -97,6 +101,7 @@ const Home = ({ context }) => {
       }
       PlansService.getPlans(filter).then((response) => {
         setPlans(response.data);
+        setLoading(false);
       });
     };
 
@@ -106,9 +111,9 @@ const Home = ({ context }) => {
   return (
     <>
       <div className={classes.homeWrapper}>
-      <Typography variant="h1" className={classes.heading}>
-       Upcoming activities
-      </Typography>
+        <Typography variant="h1" className={classes.heading}>
+          Upcoming activities
+        </Typography>
         <FiltersList
           handleApplyFilter={handleApplyFilter}
           category={categoryFilter}
@@ -117,7 +122,13 @@ const Home = ({ context }) => {
           from={fromFilter}
           to={toFilter}
         ></FiltersList>
-        <PlansList plans={plans} />
+        {isLoading && (
+          <div className={classes.loaderWrapper}>
+            <CircularProgress color="secondary" size={80} />
+          </div>
+        )}
+
+        {plans.length > 0 && !isLoading && <PlansList plans={plans} />}
         <Snackbar
           className={classes.snackbar}
           key={`top,center`}
@@ -128,14 +139,15 @@ const Home = ({ context }) => {
           }}
           message="Please, log in with Google first"
           action={
-            <StyledButton
+            <Button
               as="a"
               href="/auth/google"
               color="inherit"
               size="medium"
+              className={classes.loginButton}
             >
               Login
-            </StyledButton>
+            </Button>
           }
         />
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import PlansService from "../services/PlansService";
@@ -9,14 +8,10 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Snackbar from "@material-ui/core/Snackbar";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import FormDialog from "../components/Dialog";
 import PlansList from "../components/PlansList";
 import BottomNavigation from "../components/BottomNavigation";
-
-const StyledButton = styled(Button)`
-  color: white;
-  text-decoration: none;
-`;
 
 const useStyles = makeStyles((theme) => ({
   homeWrapper: {
@@ -39,12 +34,21 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(4),
     position: "fixed",
   },
+  loaderWrapper: {
+    width: "100px",
+    margin: "auto",
+  },
+  loginButton: {
+    color: "white",
+    textDecoration: "none",
+  },
 }));
 
 const LikedPlansPage = ({ context }) => {
   const [plans, setPlans] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [displayLoginAlert, setDisplayLoginAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const { isAuthenticated } = context;
   const classes = useStyles();
 
@@ -61,12 +65,16 @@ const LikedPlansPage = ({ context }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
+    if (!isAuthenticated()) {
+      setLoading(false);
+      return;
+    }
     PlansService.getLikedPlans().then((response) => {
       setPlans(response.data);
+      setLoading(false);
     });
   }, []);
-
-  //TO DO: Handle loading state, not-authenthicated user, authenticated user but no favs.
 
   return (
     <>
@@ -74,7 +82,32 @@ const LikedPlansPage = ({ context }) => {
         <Typography variant="h1" className={classes.heading}>
           Your favourite
         </Typography>
-        {plans.length === 0 && <div>You don't have favourites yet.</div>}
+
+        {plans.length === 0 && isLoading && (
+          <div className={classes.loaderWrapper}>
+            <CircularProgress color="secondary" size={80} />
+          </div>
+        )}
+        {plans.length === 0 && !isLoading && !isAuthenticated() && (
+          <div>
+            <p>
+              You don't have favourites yet. Sign in via google and start saving
+              your favourite activities
+            </p>
+            <Button
+              variant="contained"
+              color="primary"
+              component="a"
+              href="/auth/google"
+              size="medium"
+            >
+              Login
+            </Button>
+          </div>
+        )}
+        {plans.length === 0 && !isLoading && isAuthenticated() && (
+          <div>You don't have favourites yet.</div>
+        )}
         {plans.length > 0 && <PlansList plans={plans} />}
         <Snackbar
           className={classes.snackbar}
@@ -86,14 +119,15 @@ const LikedPlansPage = ({ context }) => {
           }}
           message="Please, log in with Google first"
           action={
-            <StyledButton
+            <Button
               as="a"
               href="/auth/google"
               color="inherit"
               size="medium"
+              className={classes.loginButton}
             >
               Login
-            </StyledButton>
+            </Button>
           }
         />
 

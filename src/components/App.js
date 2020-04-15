@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import styled from "styled-components";
 import theme from "./../styles/theme";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Header from "./Header";
-import Home from "./Home";
+import HomePage from "./../pages/HomePage";
 import AllPlansPage from "./../pages/AllPlansPage";
 import LikedPlansPage from "../pages/LikedPlansPage";
 import PlansForm from "./PlansForm";
@@ -30,7 +30,7 @@ class App extends Component {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <main>
                 <Switch>
-                  <Route exact path="/home" component={Home} />
+                  <Route exact path="/home" component={HomePage} />
                   <Route exact path="/plans/all" component={AllPlansPage} />
                   <Route exact path="/plans/liked" component={LikedPlansPage} />
                   <Route exact path="/plans/new" component={PlansForm} />
