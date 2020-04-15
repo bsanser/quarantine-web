@@ -218,8 +218,7 @@ const PlansForm = (props) => {
             label="Title"
             name="title"
             value={formState.title}
-            onChange={handleChangeDate}
-            onAccept={handleChangeInput}
+            onChange={handleChangeInput}
             variant="outlined"
             error={errors["title"]}
             helperText={errors["title"] ? "The title is required" : ""}
