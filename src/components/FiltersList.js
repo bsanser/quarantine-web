@@ -29,6 +29,13 @@ const useStyles = makeStyles((theme) => ({
   select: {
     background: "transparent",
   },
+  filter: {
+    width: "33%",
+  },
+  //TODO: make this work
+  root: {
+    borderBottomColor: theme.palette.primary.main,
+  },
 }));
 
 const FiltersList = ({
@@ -48,9 +55,10 @@ const FiltersList = ({
         onChange={handleChangeDate}
         label="Date"
         clearable
+        className={classes.filter}
       />
 
-      <StyledFormControl variant="outlined">
+      <StyledFormControl variant="outlined" className={classes.filter}>
         <InputLabel id="outlined-category-native-simple">Category</InputLabel>
         <Select
           value={category}
@@ -59,6 +67,10 @@ const FiltersList = ({
           inputProps={{
             name: "category",
             id: "outlined-category-native-simple",
+          }}
+          classes={{
+            root: classes.root, // class name, e.g. `classes-nesting-root-x`
+            label: classes.label, // class name, e.g. `classes-nesting-label-x`
           }}
         >
           <MenuItem value="">
@@ -71,7 +83,7 @@ const FiltersList = ({
           ))}
         </Select>
       </StyledFormControl>
-      <StyledFormControl variant="outlined" className={classes.formControl}>
+      <StyledFormControl variant="outlined" className={classes.filter}>
         <InputLabel id="demo-simple-select-outlined-label">Language</InputLabel>
         <Select
           labelId="demo-simple-select-outlined-label"

@@ -1,39 +1,48 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import "./../App.css";
+import { ThemeProvider } from "@material-ui/core/styles";
+import styled from "styled-components";
+import theme from "./../styles/theme";
+import { Switch, Route } from "react-router-dom";
 import Header from "./Header";
-import Home from "./Home";
+import HomePage from "./../pages/HomePage";
+import AllPlansPage from "./../pages/AllPlansPage";
+import LikedPlansPage from "../pages/LikedPlansPage";
 import PlansForm from "./PlansForm";
 import NotFound from "./NotFound";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import AuthContextProvider from "./../contexts/AuthContext";
-import BottomNavigation from "./BottomNavigation";
+
+import LandingPage from "./../pages/LandingPage.js";
+
+const Container = styled.div`
+  height: 100%;
+  background-color: white;
+`;
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <AuthContextProvider>
-          <Header />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <main className="container">
-              <Switch>
-                <Route exact path="/home" component={Home} />
-                <Route exact path="/plans/new" component={PlansForm} />
-                <Route
-                  exact
-                  path="/"
-                  component={() => <Redirect to="/home" />}
-                />
+      <ThemeProvider theme={theme}>
+        <Container>
+          <AuthContextProvider>
+            <Header />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <main>
+                <Switch>
+                  <Route exact path="/home" component={HomePage} />
+                  <Route exact path="/plans/all" component={AllPlansPage} />
+                  <Route exact path="/plans/liked" component={LikedPlansPage} />
+                  <Route exact path="/plans/new" component={PlansForm} />
+                  <Route exact path="/" component={LandingPage} />
 
-                <Route path="/" component={NotFound} />
-              </Switch>
-            </main>
-            <BottomNavigation />
-          </MuiPickersUtilsProvider>
-        </AuthContextProvider>
-      </div>
+                  <Route path="/" component={NotFound} />
+                </Switch>
+              </main>
+            </MuiPickersUtilsProvider>
+          </AuthContextProvider>
+        </Container>
+      </ThemeProvider>
     );
   }
 }
